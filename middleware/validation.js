@@ -2,10 +2,10 @@ import { z } from 'zod';
 
 // User validation schemas
 const registerSchema = z.object({
-  Name: z
+  name: z
     .string()
     .min(3, 'Name must be at least 3 characters long')
-    .max(30, 'Name cannot exceed 30 characters')
+    .max(15, 'Name cannot exceed 15 characters')
     .trim(),
   email: z
     .string()
@@ -13,7 +13,7 @@ const registerSchema = z.object({
   password: z
     .string()
     .min(6, 'Password must be at least 6 characters long')
-    .max(100, 'Password cannot exceed 100 characters'),
+    .max(6, 'Password cannot exceed 6 characters'),
 });
 
 const loginSchema = z.object({
@@ -49,11 +49,6 @@ const updateCommentSchema = z.object({
     .trim(),
 });
 
-const refreshTokenSchema = z.object({
-  refreshToken: z
-    .string()
-    .min(1, 'Refresh token is required'),
-});
 
 const logoutSchema = z.object({
   refreshToken: z
@@ -95,7 +90,6 @@ export {
   loginSchema,
   createCommentSchema,
   updateCommentSchema,
-  refreshTokenSchema,
   logoutSchema,
   createPostSchema,
   updatePostSchema,

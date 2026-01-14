@@ -1,28 +1,24 @@
 // Validation middleware factory to validate request body with Zod schema
+import z, { ZodError } from "zod";
+
 const validateRequest = (schema) => {
   return (req, res, next) => {
     try {
+      if (process.env.NODE_ENV === 'development') {
+        console.log("Validating request data:", req.body);
+      }
       const validatedData = schema.parse(req.body);
       req.validatedData = validatedData;
       next();
     } catch (error) {
-      if (error.errors && Array.isArray(error.errors)) {
-        // Format Zod errors into humanoid messages
-        const fieldErrors = error.errors.reduce((acc, err) => {
-          const field = err.path.join('.');
-          const message = err.message;
-          acc[field] = message;
-          return acc;
-        }, {});
-
+      if (error instanceof ZodError) {
         return res.status(400).json({
-          message: 'Validation failed. Please check your input.',
-          errors: fieldErrors,
+          message: z.prettifyError(error),
         });
       }
 
       return res.status(400).json({
-        message: 'Invalid request data',
+        message: "Invalid request data",
         details: error.message,
       });
     }

@@ -10,7 +10,6 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import {
   registerSchema,
   loginSchema,
-  refreshTokenSchema,
   logoutSchema,
 } from "../middleware/validation.js";
 
@@ -24,7 +23,7 @@ router.post(
 router.post("/login", validateRequest(loginSchema), asyncHandler(login));
 router.post(
   "/refresh",
-  validateRequest(refreshTokenSchema),
+  // validateRequest(refreshTokenSchema),
   asyncHandler(refreshToken)
 );
 router.post("/logout", validateRequest(logoutSchema), asyncHandler(logout));

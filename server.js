@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 import connectDB from "./config/database.js";
 import commentRoutes from "./routes/commentRoutes.js";
@@ -12,7 +13,19 @@ import { attachRouter } from "./common/utility.js";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked this request"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 morgan.token("timestamp", () => new Date().toISOString());
 
@@ -21,6 +34,7 @@ app.use(morgan(morganFormat));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 connectDB();
 
@@ -39,7 +53,7 @@ const appRoutes = [
   },
 ];
 
-attachRouter(app,appRoutes)
+attachRouter(app, appRoutes);
 
 app.get("/health", (req, res) => {
   const mongoConnection =
