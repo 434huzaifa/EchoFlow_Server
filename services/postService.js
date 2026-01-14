@@ -1,9 +1,10 @@
 import Post from '../models/Post.js';
 
 class PostService {
-  async createPost(comment, authorId) {
+  async createPost(title, body, authorId) {
     const post = new Post({
-      comment,
+      title,
+      body,
       author: authorId,
     });
     return await post.save();
@@ -14,7 +15,7 @@ class PostService {
       page,
       limit,
       sort: { createdAt: -1 },
-      populate: { path: 'author', select: 'username email' },
+      populate: { path: 'author', select: 'Name email' },
       lean: false,
     };
 
@@ -34,10 +35,10 @@ class PostService {
   }
 
   async getPostById(id) {
-    return await Post.findById(id).populate('author', 'username email');
+    return await Post.findById(id).populate('author', 'Name email');
   }
 
-  async updatePost(id, comment, userId) {
+  async updatePost(id, updates, userId) {
     const post = await Post.findById(id);
     if (!post) {
       throw new Error('Post not found');
@@ -45,7 +46,8 @@ class PostService {
     if (post.author.toString() !== userId) {
       throw new Error('Not authorized to update this post');
     }
-    post.comment = comment;
+    if (updates.title !== undefined) post.title = updates.title;
+    if (updates.body !== undefined) post.body = updates.body;
     return await post.save();
   }
 

@@ -1,19 +1,36 @@
-import mongoose from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
+import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const postSchema = new mongoose.Schema(
   {
-    comment: {
+    title: {
       type: String,
-      required: [true, 'Post comment is required'],
+      required: [true, "Post title is required"],
       trim: true,
-      minlength: [1, 'Post comment cannot be empty'],
-      maxlength: [1000, 'Post comment cannot exceed 1000 characters'],
+      minlength: [1, "Post title cannot be empty"],
+      maxlength: [50, "Post title cannot exceed 1000 characters"],
+    },
+    body: {
+      type: String,
+      required: [true, "Post body is required"],
+      trim: true,
+      minlength: [1, "Post body cannot be empty"],
+      maxlength: [1000, "Post body cannot exceed 1000 characters"],
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Author is required'],
+      ref: "User",
+      required: [true, "Author is required"],
+    },
+    likes: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: null,
+    },
+    dislikes: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: null,
     },
   },
   {
@@ -27,4 +44,4 @@ postSchema.plugin(mongoosePaginate);
 // Index for author recent posts
 postSchema.index({ author: 1, createdAt: -1 });
 
-export default mongoose.model('Post', postSchema);
+export default mongoose.model("Post", postSchema);

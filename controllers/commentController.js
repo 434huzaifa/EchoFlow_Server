@@ -1,8 +1,8 @@
 import commentService from '../services/commentService.js';
 
 const createComment = async (req, res) => {
-  const { text } = req.validatedData;
-  const comment = await commentService.createComment(text, req.userId);
+  const { text, post, path } = req.validatedData;
+  const comment = await commentService.createComment(text, req.userId, post, path);
   res.status(201).json({ message: 'Comment created successfully', comment });
 };
 

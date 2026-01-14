@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 // User validation schemas
 const registerSchema = z.object({
-  username: z
+  Name: z
     .string()
-    .min(3, 'Username must be at least 3 characters long')
-    .max(30, 'Username cannot exceed 30 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
+    .min(3, 'Name must be at least 3 characters long')
+    .max(30, 'Name cannot exceed 30 characters')
+    .trim(),
   email: z
     .string()
     .email('Please provide a valid email address'),
@@ -32,6 +32,13 @@ const createCommentSchema = z.object({
     .min(1, 'Comment cannot be empty')
     .max(1000, 'Comment cannot exceed 1000 characters')
     .trim(),
+  post: z
+    .string()
+    .min(1, 'Post ID is required'),
+  path: z
+    .string()
+    .optional()
+    .nullable(),
 });
 
 const updateCommentSchema = z.object({
@@ -56,19 +63,31 @@ const logoutSchema = z.object({
 
 // Post validation schemas
 const createPostSchema = z.object({
-  comment: z
+  title: z
     .string()
-    .min(1, 'Post comment cannot be empty')
-    .max(1000, 'Post comment cannot exceed 1000 characters')
+    .min(1, 'Post title cannot be empty')
+    .max(50, 'Post title cannot exceed 50 characters')
+    .trim(),
+  body: z
+    .string()
+    .min(1, 'Post body cannot be empty')
+    .max(1000, 'Post body cannot exceed 1000 characters')
     .trim(),
 });
 
 const updatePostSchema = z.object({
-  comment: z
+  title: z
     .string()
-    .min(1, 'Post comment cannot be empty')
-    .max(1000, 'Post comment cannot exceed 1000 characters')
-    .trim(),
+    .min(1, 'Post title cannot be empty')
+    .max(50, 'Post title cannot exceed 50 characters')
+    .trim()
+    .optional(),
+  body: z
+    .string()
+    .min(1, 'Post body cannot be empty')
+    .max(1000, 'Post body cannot exceed 1000 characters')
+    .trim()
+    .optional(),
 });
 
 export {

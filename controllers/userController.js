@@ -3,17 +3,17 @@ import tokenService from "../services/tokenService.js";
 
 const register = async (req, res) => {
   try {
-    const { username, email, password } = req.validatedData;
+    const { Name, email, password } = req.validatedData;
 
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    const existingUser = await User.findOne({ $or: [{ email }, { Name }] });
     if (existingUser) {
       return res.status(400).json({
         message:
-          "This username or email is already registered. Please try another.",
+          "This name or email is already registered. Please try another.",
       });
     }
 
-    const user = new User({ username, email, password });
+    const user = new User({ Name, email, password });
     await user.save();
 
     const accessToken = tokenService.generateAccessToken(user._id);
@@ -23,7 +23,7 @@ const register = async (req, res) => {
       message: "User registered successfully",
       accessToken,
       refreshToken,
-      user: { id: user._id, username: user.username, email: user.email },
+      user: { id: user._id, Name: user.Name, email: user.email },
     });
   } catch (error) {
     throw error;
@@ -61,7 +61,7 @@ const login = async (req, res) => {
       message: "Login successful",
       accessToken,
       refreshToken,
-      user: { id: user._id, username: user.username, email: user.email },
+      user: { id: user._id, Name: user.Name, email: user.email },
     });
   } catch (error) {
     throw error;
@@ -95,7 +95,7 @@ const refreshToken = async (req, res) => {
     res.json({
       message: "Access token refreshed successfully",
       accessToken,
-      user: { id: user._id, username: user.username, email: user.email },
+      user: { id: user._id, Name: user.Name, email: user.email },
     });
   } catch (error) {
     throw error;

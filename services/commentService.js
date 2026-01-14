@@ -1,10 +1,12 @@
 import Comment from '../models/Comment.js';
 
 class CommentService {
-  async createComment(text, authorId) {
+  async createComment(text, authorId, postId, path = null) {
     const comment = new Comment({
       text,
       author: authorId,
+      post: postId,
+      path,
     });
     return await comment.save();
   }
@@ -23,8 +25,8 @@ class CommentService {
       limit,
       sort: sortOption,
       populate: [
-        { path: 'author', select: 'username email' },
-        { path: 'replies' }
+        { path: 'author', select: 'Name email' },
+        { path: 'post', select: 'title' }
       ],
       lean: false,
     };
@@ -46,8 +48,8 @@ class CommentService {
 
   async getCommentById(id) {
     return await Comment.findById(id)
-      .populate('author', 'username email')
-      .populate('replies');
+      .populate('author', 'Name email')
+      .populate('post', 'title');
   }
 
   async updateComment(id, text, userId) {

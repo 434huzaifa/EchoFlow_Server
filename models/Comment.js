@@ -15,6 +15,15 @@ const commentSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Author is required'],
     },
+    path:{ // replay path
+      type:String,
+      default:null,
+    },
+    post:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Post",
+      required: [true, 'Post is required for comment'],
+    },
     likes: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'User',
@@ -24,16 +33,6 @@ const commentSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'User',
       default: [],
-    },
-    replies: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Comment',
-      default: [],
-    },
-    parentComment: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment',
-      default: null,
     },
   },
   {

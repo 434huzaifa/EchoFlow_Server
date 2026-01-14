@@ -1,8 +1,8 @@
 import postService from '../services/postService.js';
 
 const createPost = async (req, res) => {
-  const { comment } = req.validatedData;
-  const post = await postService.createPost(comment, req.userId);
+  const { title, body } = req.validatedData;
+  const post = await postService.createPost(title, body, req.userId);
   res.status(201).json({ message: 'Post created successfully', post });
 };
 
@@ -23,9 +23,9 @@ const getPostById = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-  const { comment } = req.validatedData;
+  const { title, body } = req.validatedData;
   try {
-    const post = await postService.updatePost(req.params.id, comment, req.userId);
+    const post = await postService.updatePost(req.params.id, { title, body }, req.userId);
     res.json({ message: 'Post updated successfully', post });
   } catch (error) {
     if (error.message.includes('Not authorized')) {
