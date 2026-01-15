@@ -42,8 +42,22 @@ const commentSchema = new mongoose.Schema(
 
 commentSchema.plugin(mongoosePaginate);
 
-commentSchema.index({ author: 1, createdAt: -1 });
+// Indexes as per specification
+// One comment per user per post (root comments only)
+commentSchema.index(
+  { author: 1, post: 1, path: 1 },
+  { unique: true, sparse: true, partialFilterExpression: { path: null } }
+);
+
+// For efficient replies queries
+commentSchema.index({ post: 1, path: 1 });
+
+// For sorting by likes/dislikes
 commentSchema.index({ likes: 1 });
 commentSchema.index({ dislikes: 1 });
+
+// For sorting by date
+commentSchema.index({ createdAt: -1 });
+commentSchema.index({ updatedAt: -1 });
 
 export default mongoose.model('Comment', commentSchema);

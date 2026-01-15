@@ -7,7 +7,6 @@ const registerSchema = z.object({
     .max(15, 'Name cannot exceed 15 characters')
     .trim(),
   email: z
-    .string()
     .email('Please provide a valid email address'),
   password: z
     .string()
@@ -17,7 +16,6 @@ const registerSchema = z.object({
 
 const loginSchema = z.object({
   email: z
-    .string()
     .email('Please provide a valid email address'),
   password: z
     .string()
@@ -44,6 +42,22 @@ const updateCommentSchema = z.object({
     .string()
     .min(1, 'Comment cannot be empty')
     .max(1000, 'Comment cannot exceed 1000 characters')
+    .trim(),
+});
+
+const createReplySchema = z.object({
+  text: z
+    .string()
+    .min(1, 'Reply cannot be empty')
+    .max(1000, 'Reply cannot exceed 1000 characters')
+    .trim(),
+});
+
+const updateReplySchema = z.object({
+  text: z
+    .string()
+    .min(1, 'Reply cannot be empty')
+    .max(1000, 'Reply cannot exceed 1000 characters')
     .trim(),
 });
 
@@ -93,6 +107,8 @@ export {
   loginSchema,
   createCommentSchema,
   updateCommentSchema,
+  createReplySchema,
+  updateReplySchema,
   logoutSchema,
   createPostSchema,
   updatePostSchema,

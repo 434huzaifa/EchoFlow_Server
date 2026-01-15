@@ -15,7 +15,7 @@ class PostService {
       page,
       limit,
       sort: { createdAt: -1 },
-      populate: { path: 'author', select: 'Name email' },
+      populate: { path: 'author', select: 'name email' },
       lean: false,
     };
 
@@ -35,7 +35,7 @@ class PostService {
   }
 
   async getPostById(id) {
-    return await Post.findById(id).populate('author', 'Name email');
+    return await Post.findById(id).populate('author', 'name email');
   }
 
   async updatePost(id, updates, userId) {
@@ -62,52 +62,43 @@ class PostService {
     return await Post.findByIdAndDelete(id);
   }
 
-  async likePost(postId, userId) {
+  // helper for toggle post reaction
+  async _togglePostReaction(postId, userId, reactionType) {
     const post = await Post.findById(postId);
     if (!post) {
       throw new Error('Post not found');
     }
 
     const userIdStr = userId.toString();
-    const hasLiked = post.likes?.some((id) => id.toString() === userIdStr);
-    const hasDisliked = post.dislikes?.some((id) => id.toString() === userIdStr);
+    const oppositeType = reactionType === 'likes' ? 'dislikes' : 'likes';
+    const hasReacted = post[reactionType]?.some((id) => id.toString() === userIdStr);
 
-    if (hasLiked) {
-      post.likes = post.likes.filter((id) => id.toString() !== userIdStr);
+    if (hasReacted) {
+      // remove existing reaction
+      post[reactionType] = post[reactionType].filter(
+        (id) => id.toString() !== userIdStr
+      );
     } else {
-      if (hasDisliked) {
-        post.dislikes = post.dislikes.filter((id) => id.toString() !== userIdStr);
+      // add new reaction and remove opposit
+      if (post[oppositeType]?.some((id) => id.toString() === userIdStr)) {
+        post[oppositeType] = post[oppositeType].filter(
+          (id) => id.toString() !== userIdStr
+        );
       }
-      if (!post.likes) post.likes = [];
-      post.likes.push(userId);
+      if (!post[reactionType]) post[reactionType] = [];
+      post[reactionType].push(userId);
     }
 
     await post.save();
     return await post.populate('author', 'name email');
   }
 
+  async likePost(postId, userId) {
+    return await this._togglePostReaction(postId, userId, 'likes');
+  }
+
   async dislikePost(postId, userId) {
-    const post = await Post.findById(postId);
-    if (!post) {
-      throw new Error('Post not found');
-    }
-
-    const userIdStr = userId.toString();
-    const hasLiked = post.likes?.some((id) => id.toString() === userIdStr);
-    const hasDisliked = post.dislikes?.some((id) => id.toString() === userIdStr);
-
-    if (hasDisliked) {
-      post.dislikes = post.dislikes.filter((id) => id.toString() !== userIdStr);
-    } else {
-      if (hasLiked) {
-        post.likes = post.likes.filter((id) => id.toString() !== userIdStr);
-      }
-      if (!post.dislikes) post.dislikes = [];
-      post.dislikes.push(userId);
-    }
-
-    await post.save();
-    return await post.populate('author', 'name email');
+    return await this._togglePostReaction(postId, userId, 'dislikes');
   }
 }
 
