@@ -4,14 +4,14 @@ A MERN stack comment system with real-time updates using Socket.IO and JWT authe
 
 ## Features
 
-- 🔐 User authentication with JWT tokens
-- 💬 Create, update, and delete comments
-- 💭 Reply to comments (one level deep)
-- 👍 Like/dislike posts and comments
-- 🔄 Real-time updates via WebSockets
-- 📄 Pagination support
-- 🎯 One comment per user per post
-- ⚡ Optimized with MongoDB indexes
+- User authentication with JWT tokens
+- Create, update, and delete comments
+- Reply to comments (one level deep)
+- Like/dislike posts and comments
+- Real-time updates via WebSockets
+- Pagination support
+- One comment per user per post
+- Optimized with MongoDB indexes
 
 ## Tech Stack
 
