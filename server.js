@@ -110,6 +110,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`🚀 EchoFlow Server started on port ${PORT}`);
-  console.log(`🔌 Socket.io initialized on port ${PORT}`);
+  console.log(`EchoFlow Server started on port ${PORT}`);
+  console.log(`Socket.io initialized on port ${PORT}`);
 });

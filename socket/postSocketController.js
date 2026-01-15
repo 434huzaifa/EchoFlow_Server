@@ -4,7 +4,6 @@ import commentService from "../services/commentService.js";
 const handleFetchPosts = async (socket, payload, callback) => {
   try {
     const { cursor, limit = 10, sort } = payload;
-    console.info("🚀 ~ handleFetchPosts ~ sort:", sort);
     const currentUserId = socket.userId;
 
     const query = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
