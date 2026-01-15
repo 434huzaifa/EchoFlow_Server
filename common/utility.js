@@ -1,6 +1,5 @@
 import expressListRoutes from "express-list-routes";
 
-// attach routers to express app
 export function attachRouter(app, appRouter) {
   appRouter.forEach((x) => {
     if (process.env.NODE_ENV == "development") {

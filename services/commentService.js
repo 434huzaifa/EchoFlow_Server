@@ -2,7 +2,6 @@ import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 
 class CommentService {
-  // Helper method to check duplicate comment
   async _checkDuplicateComment(authorId, postId) {
     const existingComment = await Comment.findOne({
       author: authorId,
@@ -17,7 +16,6 @@ class CommentService {
     }
   }
 
-  // Helper to update post comment count
   async _updatePostCommentCount(postId, increment) {
     await Post.findByIdAndUpdate(
       postId,
@@ -27,7 +25,6 @@ class CommentService {
   }
 
   async createComment(text, authorId, postId, path = null) {
-    // check for duplicate comment if its root comment
     if (!path) {
       await this._checkDuplicateComment(authorId, postId);
     }
@@ -83,13 +80,11 @@ class CommentService {
       sortOption = { dislikesCount: -1, createdAt: -1 };
     }
 
-    // Fetch root comments with nested replies
     const rootComments = await Comment.find({ post: postId, path: null })
       .sort(sortOption)
       .populate("author", "name email")
       .lean();
 
-    // Fetch replies for each root comment
     const commentsWithReplies = await Promise.all(
       rootComments.map(async (comment) => {
         const replies = await Comment.find({ path: comment._id.toString() })
@@ -134,7 +129,6 @@ class CommentService {
       throw new Error("Not authorized to delete this comment");
     }
 
-    // Count and delete all replies
     const replyCount = await Comment.countDocuments({ path: id });
     if (replyCount > 0) {
       await Comment.deleteMany({ path: id });

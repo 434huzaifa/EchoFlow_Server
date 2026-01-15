@@ -74,12 +74,10 @@ class PostService {
     const hasReacted = post[reactionType]?.some((id) => id.toString() === userIdStr);
 
     if (hasReacted) {
-      // remove existing reaction
       post[reactionType] = post[reactionType].filter(
         (id) => id.toString() !== userIdStr
       );
     } else {
-      // add new reaction and remove opposit
       if (post[oppositeType]?.some((id) => id.toString() === userIdStr)) {
         post[oppositeType] = post[oppositeType].filter(
           (id) => id.toString() !== userIdStr

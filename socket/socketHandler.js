@@ -21,7 +21,7 @@ const initializeSocket = (io) => {
   });
 
   io.on("connection", (socket) => {
-    console.log(`✅ User connected: ${socket.id} | User ID: ${socket.userId}`);
+    console.log(`=> User connected: ${socket.id} | User ID: ${socket.userId}`);
 
     // Post events
     socket.on("FETCH_POSTS_REQUEST", (payload, callback) => {

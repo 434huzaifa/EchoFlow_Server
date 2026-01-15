@@ -1,7 +1,6 @@
 import commentService from '../services/commentService.js';
 import { formatResponse } from '../common/helpers.js';
 
-// format comment with reply data
 const formatCommentWithReplies = (comment, userId, replies = []) => {
   const formattedReplies = replies.map((r) => formatResponse(r, userId));
   return formatResponse(comment, userId, { replies: formattedReplies });
@@ -128,7 +127,6 @@ const createReply = async (req, res) => {
     const populatedReply = await reply.populate('author', 'name email');
     const formattedReply = formatResponse(populatedReply, req.userId);
 
-    // fetch parent comment with updated replies
     const refreshedComment = await commentService.getCommentWithReplies(commentId);
     const formattedParent = refreshedComment 
       ? formatCommentWithReplies(refreshedComment, req.userId, refreshedComment.replies)
@@ -173,7 +171,6 @@ const deleteReply = async (req, res) => {
     const { replyId } = req.params;
     const result = await commentService.deleteReply(replyId, req.userId);
 
-    // fetch parent comment with updated replies list
     const refreshedComment = await commentService.getCommentWithReplies(result.parentCommentId);
     const formattedParent = refreshedComment 
       ? formatCommentWithReplies(refreshedComment, req.userId, refreshedComment.replies)

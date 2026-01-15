@@ -1,4 +1,3 @@
-// common helper to format response for post or comment
 export const formatResponse = (item, userId, overrides = {}) => {
   const userIdStr = userId?.toString();
   const itemObj = item.toObject ? item.toObject() : item;

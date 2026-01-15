@@ -26,7 +26,6 @@ import {
 
 const router = express.Router();
 
-// Comment routes
 router.post(
   "/",
   authMiddleware,
