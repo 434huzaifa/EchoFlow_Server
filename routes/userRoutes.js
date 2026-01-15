@@ -23,7 +23,6 @@ router.post(
 router.post("/login", validateRequest(loginSchema), asyncHandler(login));
 router.post(
   "/refresh",
-  // validateRequest(refreshTokenSchema),
   asyncHandler(refreshToken)
 );
 router.post("/logout", validateRequest(logoutSchema), asyncHandler(logout));

@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
       required: [true, "Post title is required"],
       trim: true,
       minlength: [1, "Post title cannot be empty"],
-      maxlength: [50, "Post title cannot exceed 1000 characters"],
+      maxlength: [50, "Post title cannot exceed 50 characters"],
     },
     body: {
       type: String,
@@ -38,10 +38,8 @@ const postSchema = new mongoose.Schema(
   }
 );
 
-// Add pagination plugin
 postSchema.plugin(mongoosePaginate);
 
-// Index for author recent posts
 postSchema.index({ author: 1, createdAt: -1 });
 
 export default mongoose.model("Post", postSchema);

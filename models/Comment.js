@@ -40,10 +40,8 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-// Add pagination plugin
 commentSchema.plugin(mongoosePaginate);
 
-// Index for better query performance
 commentSchema.index({ author: 1, createdAt: -1 });
 commentSchema.index({ likes: 1 });
 commentSchema.index({ dislikes: 1 });

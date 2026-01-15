@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// User validation schemas
 const registerSchema = z.object({
   name: z
     .string()
@@ -25,7 +24,6 @@ const loginSchema = z.object({
     .min(1, 'Password is required'),
 });
 
-// Comment validation schemas
 const createCommentSchema = z.object({
   text: z
     .string()
@@ -56,7 +54,6 @@ const logoutSchema = z.object({
     .optional(),
 });
 
-// Post validation schemas
 const createPostSchema = z.object({
   title: z
     .string()
@@ -85,6 +82,12 @@ const updatePostSchema = z.object({
     .optional(),
 });
 
+const postIdParamSchema = z.object({
+  id: z
+    .string()
+    .regex(/^[0-9a-fA-F]{24}$/, 'Invalid post ID format'),
+});
+
 export {
   registerSchema,
   loginSchema,
@@ -93,4 +96,5 @@ export {
   logoutSchema,
   createPostSchema,
   updatePostSchema,
+  postIdParamSchema,
 };

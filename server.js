@@ -4,12 +4,15 @@ import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import http from "http";
+import { Server } from "socket.io";
 
 import connectDB from "./config/database.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import { attachRouter } from "./common/utility.js";
+import initializeSocket from "./socket/socketHandler.js";
 
 const app = express();
 
@@ -37,6 +40,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 connectDB();
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: corsOptions,
+  transports: ["websocket", "polling"],
+});
+
+initializeSocket(io);
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 const appRoutes = [
   {
@@ -75,7 +91,6 @@ app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const isDevelopment = process.env.NODE_ENV === "development";
 
-  // Print error trace
   console.error("\n=> ERROR TRACE:");
   console.error(`Status: ${statusCode}`);
   console.error(`Message: ${err.message}`);
@@ -84,7 +99,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   console.error("\n");
 
-  // Send error response
   const errorResponse = {
     message: err.message || "Something went wrong. Please try again later.",
     ...(isDevelopment && { stack: err.stack }),
@@ -95,6 +109,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 EchoFlow Server started on port ${PORT}`);
+  console.log(`🔌 Socket.io initialized on port ${PORT}`);
 });

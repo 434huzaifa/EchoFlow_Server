@@ -1,17 +1,18 @@
 import express from "express";
 import { authMiddleware } from "../middleware/auth.js";
-import validateRequest from "../middleware/validateRequest.js";
+import validateRequest, { validateParams } from "../middleware/validateRequest.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import {
   createPostSchema,
   updatePostSchema,
+  postIdParamSchema,
 } from "../middleware/validation.js";
 import {
   createPost,
-  getPosts,
-  getPostById,
   updatePost,
   deletePost,
+  likePost,
+  dislikePost,
 } from "../controllers/postController.js";
 
 const router = express.Router();
@@ -22,14 +23,32 @@ router.post(
   validateRequest(createPostSchema),
   asyncHandler(createPost)
 );
-router.get("/", asyncHandler(getPosts));
-router.get("/:id", asyncHandler(getPostById));
+
 router.put(
   "/:id",
   authMiddleware,
+  validateParams(postIdParamSchema),
   validateRequest(updatePostSchema),
   asyncHandler(updatePost)
 );
-router.delete("/:id", authMiddleware, asyncHandler(deletePost));
+router.delete(
+  "/:id",
+  authMiddleware,
+  validateParams(postIdParamSchema),
+  asyncHandler(deletePost)
+);
+
+router.post(
+  "/:id/like",
+  authMiddleware,
+  validateParams(postIdParamSchema),
+  asyncHandler(likePost)
+);
+router.post(
+  "/:id/dislike",
+  authMiddleware,
+  validateParams(postIdParamSchema),
+  asyncHandler(dislikePost)
+);
 
 export default router;

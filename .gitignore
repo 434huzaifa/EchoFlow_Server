@@ -1,3 +1,4 @@
 node_modules/
 .env
 Agents.MD
+SOCKET_INSTRUCTIONS.md

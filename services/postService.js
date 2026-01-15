@@ -61,6 +61,54 @@ class PostService {
     }
     return await Post.findByIdAndDelete(id);
   }
+
+  async likePost(postId, userId) {
+    const post = await Post.findById(postId);
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    const userIdStr = userId.toString();
+    const hasLiked = post.likes?.some((id) => id.toString() === userIdStr);
+    const hasDisliked = post.dislikes?.some((id) => id.toString() === userIdStr);
+
+    if (hasLiked) {
+      post.likes = post.likes.filter((id) => id.toString() !== userIdStr);
+    } else {
+      if (hasDisliked) {
+        post.dislikes = post.dislikes.filter((id) => id.toString() !== userIdStr);
+      }
+      if (!post.likes) post.likes = [];
+      post.likes.push(userId);
+    }
+
+    await post.save();
+    return await post.populate('author', 'name email');
+  }
+
+  async dislikePost(postId, userId) {
+    const post = await Post.findById(postId);
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
+    const userIdStr = userId.toString();
+    const hasLiked = post.likes?.some((id) => id.toString() === userIdStr);
+    const hasDisliked = post.dislikes?.some((id) => id.toString() === userIdStr);
+
+    if (hasDisliked) {
+      post.dislikes = post.dislikes.filter((id) => id.toString() !== userIdStr);
+    } else {
+      if (hasLiked) {
+        post.likes = post.likes.filter((id) => id.toString() !== userIdStr);
+      }
+      if (!post.dislikes) post.dislikes = [];
+      post.dislikes.push(userId);
+    }
+
+    await post.save();
+    return await post.populate('author', 'name email');
+  }
 }
 
 export default new PostService();
