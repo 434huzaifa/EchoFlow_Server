@@ -47,7 +47,6 @@ npm install
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/echoflow
 JWT_SECRET=your_super_secret_jwt_key_here
-JWT_REFRESH_SECRET=your_refresh_secret_key_here
 NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
@@ -134,18 +133,5 @@ EchoFlow_Server/
 ├── server.js        # Entry point
 └── package.json     # Dependencies
 ```
-
-## Environment Variables
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `PORT` | Server port | `5000` |
-| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/echoflow` |
-| `JWT_SECRET` | Secret key for JWT tokens | `your_secret_key` |
-| `JWT_REFRESH_SECRET` | Secret for refresh tokens | `your_refresh_secret` |
-| `NODE_ENV` | Environment mode | `development` or `production` |
-| `ALLOWED_ORIGINS` | CORS allowed origins | `http://localhost:3000` |
-
-
 
 [Frontend Server](https://github.com/434huzaifa/EchoFlow)
